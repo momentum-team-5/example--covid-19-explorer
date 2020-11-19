@@ -14,6 +14,7 @@ function App () {
   const [globalStats, setGlobalStats] = useState({})
   const [loading, setLoading] = useState(true)
   const [selectedCountry, setSelectedCountry] = useState(null)
+  const [sortBy, setSortBy] = useState('Country')
 
   useEffect(() => {
     fetch('https://api.covid19api.com/summary')
@@ -24,6 +25,10 @@ function App () {
         setLoading(false)
       })
   }, [])
+
+  function updateSort (event) {
+    setSortBy(event.target.value)
+  }
 
   if (loading) {
     return (<LoadingIndicator />)
@@ -38,6 +43,23 @@ function App () {
     )
   }
 
+  const sortedCountries = countries.sort(function (countryA, countryB) {
+    let sortVal
+    if (countryA[sortBy] < countryB[sortBy]) {
+      sortVal = -1
+    } else if (countryA[sortBy] > countryB[sortBy]) {
+      sortVal = 1
+    } else {
+      sortVal = 0
+    }
+
+    if (sortBy !== 'Country') {
+      sortVal = -sortVal
+    }
+
+    return sortVal
+  })
+
   return (
     <div className='mw7 center pa2'>
       <h2>Global Cases</h2>
@@ -48,8 +70,40 @@ function App () {
         <b>Total Cases:</b> {formatNum(globalStats.TotalConfirmed)}
       </div>
       <h2>Cases by Country</h2>
+
+      <div>
+        <b>Sort by</b>{' '}
+        <label>
+          <input
+            type='radio'
+            name='sort'
+            value='Country'
+            checked={sortBy === 'Country'}
+            onChange={updateSort}
+          /> Country Name
+        </label>{' '}
+        <label>
+          <input
+            type='radio'
+            name='sort'
+            value='NewConfirmed'
+            checked={sortBy === 'NewConfirmed'}
+            onChange={updateSort}
+          /> New Cases
+        </label>{' '}
+        <label>
+          <input
+            type='radio'
+            name='sort'
+            value='TotalConfirmed'
+            checked={sortBy === 'TotalConfirmed'}
+            onChange={updateSort}
+          /> Total Cases
+        </label>{' '}
+      </div>
+
       <ul className='list pl0'>
-        {countries.map((country) => (
+        {sortedCountries.map((country) => (
           <li key={country.CountryCode}>
             <div className='flex mv2'>
               <div className='f4 w5'>
