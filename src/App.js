@@ -1,5 +1,3 @@
-/* globals fetch */
-
 import 'tachyons'
 import { useEffect, useState } from 'react'
 import LoadingIndicator from './components/LoadingIndicator'
