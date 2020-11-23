@@ -45,15 +45,15 @@ export default function CountryData (props) {
   }, [country])
 
   return (
-    <div>
+    <div className='mw8 center'>
       <h2>{country.Country}</h2>
       <button onClick={clearSelectedCountry}>
         Go back to all countries
       </button>
 
-      <ul>
+      <ul className='list ml0 pl0'>
         {dailyStats.map((day) => (
-          <li key={day.date}>
+          <li key={day.date} className='mv2'>
             <div>Date: {day.date}</div>
             <div>Total Confirmed Cases: {day.cases}</div>
           </li>
